@@ -50,12 +50,13 @@ def predict_eye_disease(img):
              time.sleep(0.01)
              my_bar.progress(percent_complete + 1)
                 
-         per = float(cataract_pred)
+         per = float(cataract_pred) *100 
+
     
-         st.write("There is a :")
+         st.write('The possibility of patient having cataract is: {:.2f}%'.format(per))
         
      
-         st.write(per)
+         #st.write(per)
             
             
 
@@ -64,7 +65,7 @@ def main():
 
     #HTML code variables
     html_main_header = """
-    <div style="background:#3359cc;padding:10px">
+    <div style="background:#000000;padding:10px">
     <h2 style="color:white;text-align:center;">  Eye Diagnostic Tool </h2>
     </div>
     """
