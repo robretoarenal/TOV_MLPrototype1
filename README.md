@@ -1,4 +1,4 @@
-# HealthTool web app deployed on Heroku
+# web app deployed on Heroku
 
 
 
