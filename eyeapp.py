@@ -35,7 +35,9 @@ def eye_user_input():
 def predict_eye_disease(img):
     
          image = np.asarray(img)
-         resized_img = cv2.resize(image, (64, 64))
+         #resized_img = cv2.resize(image, (64, 64))
+         #change to BGR(blue, green, red)
+         resized_img= cv2.resize(image[:,:,::-1], (64, 64))
          reshaped_img = resized_img.reshape(1 ,64 , 64 , -1)
          
        
