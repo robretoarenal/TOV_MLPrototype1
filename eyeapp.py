@@ -9,14 +9,14 @@ import time
 
 
 #import keras model
-eye_model = load_model('sigmoid_final_cataract-90.h5')
+eye_model_1 = load_model('sigmoid_final_cataract-90.h5')
+eye_model_2 = load_model('accuracy-92size100x100_Threshold_0.56.h5')
 
 st.set_page_config(page_title="AI EYE DIAGNOSIS", page_icon=None)
+
                    
-#function for getting user input through streamlit app
+#get uploaded image from user input
 
-
-#Eye Disease Detection. User input
 def eye_user_input():
     
     uploaded_eye_img = st.sidebar.file_uploader("UPLOAD EYE IMAGE ...", type=["jpeg", "jpg"])
@@ -28,23 +28,48 @@ def eye_user_input():
          #add the predict button after the image is uploaded
         
          if st.button("Predict"): 
-            predict_eye_disease(eye_image)
-            
-
-       
-def predict_eye_disease(img):
+            predict_eye_disease_cataract_1(eye_image)
+           
+def eye_user_input_cataract_1():
     
-         image = np.asarray(img)
-         #resized_img = cv2.resize(image, (64, 64))
-         #change to BGR(blue, green, red)
+       
+       uploaded_eye_img = st.sidebar.file_uploader("UPLOAD EYE IMAGE ...", type=["jpeg", "jpg"])
+    
+       if uploaded_eye_img is not None:
+             #Load Image
+             eye_image = Image.open(uploaded_eye_img)
+             st.image(eye_image, caption='Eye Image', use_column_width=False, width=200)
+             #add the predict button after the image is uploaded
+        
+             if st.button("Predict"): 
+                 predict_eye_disease_cataract_1(eye_image)
+
+def eye_user_input_cataract_2():
+    
+       
+       uploaded_eye_img = st.sidebar.file_uploader("UPLOAD EYE IMAGE ...", type=["jpeg", "jpg"])
+    
+       if uploaded_eye_img is not None:
+             #Load Image
+             eye_image = Image.open(uploaded_eye_img)
+             st.image(eye_image, caption='Eye Image', use_column_width=False, width=200)
+             #add the predict button after the image is uploaded
+        
+             if st.button("Predict"): 
+                 predict_eye_disease_cataract_2(eye_image)
+           
+           
+#predict using eye model 1                
+def predict_eye_disease_cataract_1(img):
+    
+         image = np.asarray(img)      
          resized_img= cv2.resize(image[:,:,::-1], (64, 64))
          reshaped_img = resized_img.reshape(1 ,64 , 64 , -1)
-         
-       
-         cataract_pred= eye_model.predict(reshaped_img)
+              
+         cataract_pred= eye_model_1.predict(reshaped_img)
          st.write("")
-       
-
+  
+        #show progress bar
          my_bar = st.progress(0)
 
          for percent_complete in range(100):
@@ -56,11 +81,30 @@ def predict_eye_disease(img):
     
          st.write('The possibility of patient having cataract is: {:.2f}%'.format(per))
         
-     
-         #st.write(per)
-            
-            
+        
+#predict using eye model 1                
+def predict_eye_disease_cataract_2(img):
+    
+         image = np.asarray(img)      
+         resized_img= cv2.resize(image[:,:,::-1], (100, 100))
+         reshaped_img = resized_img.reshape(1 ,100 , 100 , -1)
+              
+         cataract_pred= eye_model_2.predict(reshaped_img)
+         st.write("")
+  
+        #show progress bar
+         my_bar = st.progress(0)
 
+         for percent_complete in range(100):
+             time.sleep(0.01)
+             my_bar.progress(percent_complete + 1)
+                
+         per = float(cataract_pred) *100 
+
+    
+         st.write('The possibility of patient having cataract is: {:.2f}%'.format(per))
+        
+ 
 
 def main():
 
@@ -92,7 +136,7 @@ def main():
         
     #menu item selcction
     
-    menu_items= [" ", "Cataract", "Diabetic Retinopathy"]
+    menu_items= [" ", "Cataract-Retinal","Cataract-Anterior"," Diabetic Retinopathy"]
     
     choice = st.sidebar.selectbox("MENU", menu_items)   
     
@@ -103,12 +147,18 @@ def main():
         st.subheader('Diabetic Retinopathy')
         
  
-    elif choice == "Cataract":
+    elif choice == "Cataract-Retinal":
         
         # PATIENT DATA
-        st.subheader('Cataract')   
-        eye_user_input()
+        st.subheader('Cataract-Retinal')   
+        eye_user_input_cataract_1()
+    
+             
+    elif choice == "Cataract-Anterior":
         
+        # PATIENT DATA
+        st.subheader('Cataract-Anterior')   
+        eye_user_input_cataract_2()
 
     
 if __name__=='__main__':
