@@ -83,7 +83,7 @@ def eye_user_input_cataract():
     st.sidebar.image('997_right.jpg', width= 100, caption='Retinal Image')
     st.sidebar.image('rob.jpeg', width= 70, caption='Anterior Image')
     image_types= ['Retinal Image', 'Anterior Image']
-    selection = st.sidebar.radio("What type of image are you uploading?", image_types)
+    selection = st.radio("What type of image are you uploading?", image_types)
     
     if selection == 'Retinal Image':
         eye_user_input_cataract_1()
@@ -99,7 +99,7 @@ def eye_user_input_cataract_1():
        if uploaded_eye_img is not None:
              #Load Image
              eye_image = Image.open(uploaded_eye_img)
-             st.image(eye_image, caption='Retinal Image Diagnosis', use_column_width=False, width=200)
+             st.image(eye_image, caption='Retinal Image Diagnosis', use_column_width=False, width=100)
              #add the predict button after the image is uploaded
         
              if st.button("Diagnose"): 
@@ -113,7 +113,7 @@ def eye_user_input_cataract_2():
        if uploaded_eye_img is not None:
              #Load Image
              eye_image = Image.open(uploaded_eye_img)
-             st.image(eye_image, caption='Eye Image', use_column_width=False, width=200)
+             st.image(eye_image, caption='Eye Image', use_column_width=False, width=100)
              #add the predict button after the image is uploaded
         
              if st.button("Diagnose"): 
