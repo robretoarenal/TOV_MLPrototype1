@@ -178,16 +178,9 @@ def main():
     st.markdown(main_header, unsafe_allow_html = True)
 
     # Side bar Header -- code below needed to properly format the side bar logo and text
-    #title_container = st.beta_container()
-    #col1, col2 = st.beta_columns([1, 20])
+  
     image = Image.open('eyesparklogo.jpeg')
-    #with title_container:
-         #with col1:
-               # st.sidebar.image(image, width=50)
-         #with col2:
-                #st.sidebar.markdown('<h2 style="color: black;">EyeSpark Diagnostic Tool</h2>',
-                           # unsafe_allow_html=True)
-                
+    
     # Side bar Header -- code below needed to properly format the side bar logo and text
     cols = st.sidebar.beta_columns(3)
     space1 = cols[0].image(image, width=100)
