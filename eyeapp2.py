@@ -38,7 +38,7 @@ dr_header = """
   
 dr_msg = """
     <div style="background:#fffffff">
-    <h3 style="color:#000000;text-align:center;">Diabetic Retinopathy Diagnosis is not available in this version of EyeSpark.</h3>
+    <h3 style="color:#000000;text-align:center;">Diabetic Retinopathy Diagnosis is not available in this version of app.</h3>
     </div>
     """   
 #variable used on side bar
@@ -80,26 +80,17 @@ def eye_user_input():
 #function below is called when user selects cataract from main menu
 def eye_user_input_cataract(): 
     
-    st.sidebar.image(['997_right.jpg','eyeimage.jpeg'], width= 100, caption=['Retinal Image','Anterior Image'])
+    st.sidebar.image('997_right.jpg', width= 100, caption='Retinal Image')
+    st.sidebar.image('rob.jpeg', width= 70, caption='Anterior Image')
     image_types= ['Retinal Image', 'Anterior Image']
-    selection = st.sidebar.radio("What type of image ar you uploading?", image_types)
+    selection = st.sidebar.radio("What type of image are you uploading?", image_types)
     
     if selection == 'Retinal Image':
         eye_user_input_cataract_1()
     if selection == 'Anterior Image':
         eye_user_input_cataract_2()
                
-    #st.sidebar.image(['997_right.jpg','rob.jpeg'], width=75, caption=['Retinal Image','Anterior Image'])
-    #if st.sidebar.button('Upload Retinal Image'):  
-               
-               #eye_user_input_cataract_1()
-               
-                
-    #st.sidebar.image('rob.jpeg', width=75, caption='Anterior Image')
-    #if st.sidebar.button('Upload Anterior Image'):                 
-               #eye_user_input_cataract_2()
-
-           
+          
 def eye_user_input_cataract_1():
     
        
@@ -149,7 +140,7 @@ def predict_eye_disease_cataract_1(img):
          per = float(cataract_pred) *100 
 
     
-         st.write('The possibility of patient having cataract is: {:.2f}%'.format(per))
+         st.write('The probability of patient having cataract is: {:.2f}%'.format(per))
         
         
 #predict using eye model 1                
@@ -187,15 +178,23 @@ def main():
     st.markdown(main_header, unsafe_allow_html = True)
 
     # Side bar Header -- code below needed to properly format the side bar logo and text
-    title_container = st.beta_container()
-    col1, col2 = st.beta_columns([1, 20])
+    #title_container = st.beta_container()
+    #col1, col2 = st.beta_columns([1, 20])
     image = Image.open('eyesparklogo.jpeg')
-    with title_container:
-         with col1:
-                st.sidebar.image(image, width=100)
-         with col2:
-                st.sidebar.markdown('<h2 style="color: black;">EyeSpark Diagnostic Tool</h2>',
-                            unsafe_allow_html=True)
+    #with title_container:
+         #with col1:
+               # st.sidebar.image(image, width=50)
+         #with col2:
+                #st.sidebar.markdown('<h2 style="color: black;">EyeSpark Diagnostic Tool</h2>',
+                           # unsafe_allow_html=True)
+                
+    # Side bar Header -- code below needed to properly format the side bar logo and text
+    cols = st.sidebar.beta_columns(3)
+    space1 = cols[0].image(image, width=100)
+    space2 = cols[1].text("   ")
+    space3 = cols[0].text("   ")
+    
+    st.sidebar.markdown('<h2 style="color: black;">EyeSpark Diagnostic Tool</h2>',unsafe_allow_html=True)
                 
     #side bar header to describe menu/ to ask user to select disease to diagnose
     st.sidebar.markdown(side_header, unsafe_allow_html = True)
