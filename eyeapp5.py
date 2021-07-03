@@ -55,11 +55,41 @@ has_disease_html = """
     <h3 style="color:white;text-align:center;"> Patient has Eye Disease</h3>
     </div>
     """
-    
-#variable to display no disease message
-no_disease_html = """
+#multiple faces detected 
+multiple_faces_html = """
+    <div style="background:#ed7834;padding:1px">
+    <h3 style="color:white;text-align:center;"> Multiple Faces Detected! Please Upload One Face!</h3>
+    </div>
+    """
+#no face detected 
+noface_html = """
+    <div style="background:#ed7834;padding:1px">
+    <h3 style="color:white;text-align:center;"> No face detected! Please Upload a Human Face!</h3>
+    </div>
+    """
+#variable to display  message
+no_cataract_right_html = """
     <div style="background:#5c92bf ;padding:1px">
-    <h3 style="color:white;text-align:center;"> Patient does not have Eye Disease</h3>
+    <h3 style="color:white;text-align:center;"> Right Eye : No Cataract Detected</h3>
+    </div>
+    """
+#variable to display no disease message
+cataract_right_html = """
+    <div style="background:#ed7834 ;padding:1px">
+    <h3 style="color:white;text-align:center;"> Right Eye : Cataract Detected</h3>
+    </div>
+    """
+
+# Cataract Preciction message
+no_cataract_left_html = """
+    <div style="background:#5c92bf ;padding:1px">
+    <h3 style="color:white;text-align:center;"> Left Eye : No Cataract Detected</h3>
+    </div>
+    """
+    
+cataract_left_html = """
+    <div style="background:#ed7834 ;padding:1px">
+    <h3 style="color:white;text-align:center;"> Left Eye : Cataract Detected</h3>
     </div>
     """
 
@@ -162,7 +192,8 @@ def print_message(key, value):
      if key == 'message':
                     
                     if value == 'No face detected':
-                        st.write('No Face Detected. Please Upload a Face!')
+                        #st.write('No Face Detected. Please Upload a Face!')
+                        st.markdown(noface_html,unsafe_allow_html = True)
                         #message = 'No Face Detected. Please Upload a Face!'
                         
                     #if value == 'success':
@@ -170,7 +201,8 @@ def print_message(key, value):
                         #message = 'Face Detected! Processing...'
                         
                     if value == 'Multiple faces detected':
-                        st.write('Multiple Faces Detected. Please Upload One Face!' )                   
+                        #st.write('Multiple Faces Detected. Please Upload One Face!' )
+                        st.markdown(multiple_faces_html,unsafe_allow_html = True)
                         #message = 'Multiple Faces Detected. Please Upload One Face!' 
         
 #predict using  API. API URL declared above  
@@ -197,24 +229,36 @@ def predict_eye_disease_cataract_2(img):
        
         
         #resp = requests.post(url=API_URL, files=test_photo)
+        t0 = time.time()
         try:
             resp = requests.models.Response()
             resp.status_code = 400
 
-            #Controlling http Session
+             #Controlling http Session
             session_ = requests.Session()
-            retries_ = Retry(total=5, backoff_factor=5, status_forcelist=[ 502, 503, 504 ])
+            allowed_methods_ = frozenset({'HEAD', 'GET', 'TRACE', 'POST'})
+            status_forcelist_ = frozenset({502, 503, 504})
+            retries_ = Retry(total=5, backoff_factor=1,allowed_methods = allowed_methods_, status_forcelist=status_forcelist_)
             session_.mount('http://', HTTPAdapter(max_retries=retries_))
+
 
             resp = session_.post(API_URL, files=test_photo, headers={'User-Agent': 'Mozilla/5.0'})
 
-    
+        except MaxRetryError as e:
+            st.write(f"Failed due to: {e.reason}")    
         except Exception as e:
-            st.write('Exception:', e)
+            if hasattr(e, 'message'):
+                st.write(f"Failed due to {e.message}")
+            else:
+                st.write(f"Failed due to: {e}")  
+    
         finally:
-           
-           session_.close()
-          
+            t1 = time.time()
+            #st.write(f"Took, {t1-t0}, seconds")
+            #print(f"Retries info:{retries_.__dict__}")
+            session_.close()
+
+                       
            
         st.write('Server Status:',resp)
        
@@ -257,22 +301,36 @@ def predict_eye_disease_cataract_2(img):
                             desc_right =dic_data[data_key]
                     
                     
-                    
+          
                     #show progress bar
                     my_bar = st.progress(0)
+                    
                     
                     for percent_complete in range(100):
                         time.sleep(0.01)
                         my_bar.progress(percent_complete + 1)
                         
+                    st.write(f"It took {round(t1-t0)} seconds to diagnose")    
                     
-                    st.write(desc_left)
-                    st.write('The probability of left eye cataract is:',diagnosis_left)
+                    per_left = float(diagnosis_left) *100 
+                    per_right = float(diagnosis_right) *100 
+
+                    if desc_left == 'Left Eye : No Cataract detected':
+                        st.markdown(no_cataract_left_html, unsafe_allow_html = True)
+                    else:
+                        st.markdown(cataract_left_html, unsafe_allow_html = True)
+                    
+                    st.write('The probability of left eye cataract is: {:.2f}%'.format(per_left))
                     st.image(cropped_left)
        
                     #st.write('---------------------------------------------')
-                    st.write(desc_right)
-                    st.write('The probability of right eye cataract is',diagnosis_right)
+                    #st.write(desc_right)
+                    if desc_right == 'Right Eye : No Cataract detected':
+                        st.markdown(no_cataract_right_html, unsafe_allow_html = True)
+                    else:
+                        st.markdown(cataract_right_html, unsafe_allow_html = True)
+                        
+                    st.write('The probability of right eye cataract is: {:.2f}%'.format(per_right))
                     st.image(cropped_right)
        
                 
