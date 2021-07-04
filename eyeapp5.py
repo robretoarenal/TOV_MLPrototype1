@@ -19,16 +19,13 @@ from requests.packages.urllib3.exceptions import MaxRetryError
 
 #import keras model-- the retinal model is not implementing with api so uploading here:
 eye_model_1 = load_model('sigmoid_final_cataract-90.h5')
-#eye_model_2 = load_model('accuracy-92size100x100_Threshold_0.56.h5')
 
-#API_URL = 'http://tov-m-LoadB-RUXY2HD2AGFL-242d67356c99bf24.elb.us-east-1.amazonaws.com:80/eyesDiagnosis'
-API_URL = 'http://tov-m-LoadB-RXZXM237C20Y-611ee7192043f9fb.elb.us-east-1.amazonaws.com:80/eyesDiagnosis'
-
+API_URL = 'http://tov-m-LoadB-9DHGIWGB3RBL-fa6e97b58b0ec9fa.elb.us-east-1.amazonaws.com:80/eyesDiagnosis'
+        
 st.set_page_config(page_title="AI EYE DIAGNOSIS", page_icon=None)
 
 #Below are HTML code variables
     
-
 cataract_header = """
     <div style="background:white";padding:0px">
     <h3 style="color:black;text-align:left;">Cataract Diagnosis</h3>    
@@ -254,8 +251,6 @@ def predict_eye_disease_cataract_2(img):
     
         finally:
             t1 = time.time()
-            #st.write(f"Took, {t1-t0}, seconds")
-            #print(f"Retries info:{retries_.__dict__}")
             session_.close()
 
                        
@@ -268,7 +263,7 @@ def predict_eye_disease_cataract_2(img):
         
         else:
             json_pairs = resp.json().items()
-            #st.write('json',json_pairs)
+          
               
             for key, value in json_pairs:
                 #st.write('key', key)
@@ -310,7 +305,7 @@ def predict_eye_disease_cataract_2(img):
                         time.sleep(0.01)
                         my_bar.progress(percent_complete + 1)
                         
-                    st.write(f"It took {round(t1-t0)} seconds to diagnose")    
+                    st.write(f"Diagnosis time: {round(t1-t0)} seconds.")    
                     
                     per_left = float(diagnosis_left) *100 
                     per_right = float(diagnosis_right) *100 
@@ -320,7 +315,7 @@ def predict_eye_disease_cataract_2(img):
                     else:
                         st.markdown(cataract_left_html, unsafe_allow_html = True)
                     
-                    st.write('The probability of left eye cataract is: {:.2f}%'.format(per_left))
+                    st.write('Probability of cataract in left eye is: {:.2f}%'.format(per_left))
                     st.image(cropped_left)
        
                     #st.write('---------------------------------------------')
@@ -330,7 +325,7 @@ def predict_eye_disease_cataract_2(img):
                     else:
                         st.markdown(cataract_right_html, unsafe_allow_html = True)
                         
-                    st.write('The probability of right eye cataract is: {:.2f}%'.format(per_right))
+                    st.write('Probability of cataract in right eye is: {:.2f}%'.format(per_right))
                     st.image(cropped_right)
        
                 
@@ -342,8 +337,7 @@ def dr_user_input_cataract():
 def main():
   # Main Header -- uses main header variable to display main header
     im_main = Image.open('eyesparklogo.jpeg')
-    #st.markdown(main_header, unsafe_allow_html = True)
-    #st.image(im_main, width=150)
+
     m_cols = st.beta_columns(3)
     m_cols[0].text("        ")
     m_cols[1].image(im_main, width=125) 
@@ -352,7 +346,6 @@ def main():
  
     # Side bar Header -- code below needed to properly format the side bar logo and text
   
-    #image = Image.open('eyesparklogo.jpeg')
     image = Image.open('innoRect.jpg')
     
     # Side bar Header -- code below needed to properly format the side bar logo and text
@@ -362,11 +355,6 @@ def main():
     cols[1].text(" ")
     
   
-  
-    
-    
-    
-    
     st.sidebar.markdown('<h2 style="color: black;">EyeSpark Diagnostic Tool</h2>',unsafe_allow_html=True)
                 
     #side bar header to describe menu/ to ask user to select disease to diagnose
